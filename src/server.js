@@ -22,11 +22,11 @@ const server = http.createServer((req, res) => {
             updated_at: new Date(),
         })
 
-        return res.end('Criação de lista de tarefas')
+        return res.writeHead(201).end()
 
     }
 
-    return res.end('Hello Julia')
+    return res.writeHead(404).end()
 })
 
 server.listen(3333)
