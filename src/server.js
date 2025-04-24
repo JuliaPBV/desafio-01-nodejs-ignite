@@ -73,6 +73,21 @@ const server = http.createServer((req, res) => {
 
   }
 }
+{
+    if (method == "PATCH" && url == "/tasks/:id/complete"){
+        const {id} = req.params;
+        const [task] = tasks.find((task) => task.id === id);
+
+        if(!task){
+            return res.writeHead(404).end()
+        }
+
+        task.completed_at = task.completed_at ? null : new Date()
+        task.updated_at = new Date()
+  
+        return res.writeHead(204).end()
+    }
+}
 
   return res.writeHead(404).end();
 });
