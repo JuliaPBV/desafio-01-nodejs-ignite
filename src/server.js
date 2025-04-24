@@ -6,6 +6,7 @@ const tasks = []
 const server = http.createServer((req, res) => {
     const { method, url } = req
 
+// funcionalidade muda a partir do método enviado.
     if (method == 'GET' && url == '/tasks') {
         return res
         .setHeader('Content-type', 'application/json')
@@ -13,14 +14,27 @@ const server = http.createServer((req, res) => {
     }
 
     if (method == 'POST' && url == '/tasks') {
-        tasks.push({
-            id: 1,
-            title: 'lavar roupa',
-            description: 'Lavar roupas brancas',
-            completed_at: null,
-            created_at: new Date(),
-            updated_at: new Date(),
-        })
+            const{ title, description } = req.body;
+
+            // o ponto de esclamação serve para inverter a lógica
+            if (!title){
+                return res.writeHead(400).end('O campo title é obrigatório')
+            }
+
+            if (!description){
+                return res.writeHead(400).end('O campo description é obrigatório')
+            }
+            const task = {
+                id: randomUUID(),
+                title,
+                description,
+                completed_at: null,
+                created_at: new Date(),
+                updated_at: new Date(),
+            }
+            tasks.push(task)
+        
+        
 
         return res.writeHead(201).end()
 

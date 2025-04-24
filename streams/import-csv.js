@@ -13,15 +13,8 @@ const csvParse = parse({
 
 
 async function read() {
-  // Initialise the parser by generating random records
   const linesParser = stream.pipe(csvParse);
 
-  // Intialise count
-  let count = 0;
-  // Report start
-  process.stdout.write('start\n');
-
-  // Iterate through each records
   for await (const line of linesParser) {
     const [title, description] = line;
 
@@ -35,8 +28,7 @@ async function read() {
         description,
       })
     })
-    time(100);
-  }
+    }
 }
 
 read()
