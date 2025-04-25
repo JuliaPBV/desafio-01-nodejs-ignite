@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 
-const databasePath = new URL('../db.json', import.meta.url)
+const databasePath = new URL('../tasks.csv', import.meta.url)
 
 export class Database {
     #database = {}
@@ -16,7 +16,7 @@ export class Database {
     }
 
     #persist() {
-        fs.writeFile(databasePath, JSON.stringify(this.#database)) //'db.json'
+        fs.writeFile(databasePath, JSON.stringify(this.#database, null, 2)) 
     }
 
     select(table, search){
