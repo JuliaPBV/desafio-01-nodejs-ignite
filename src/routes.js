@@ -1,6 +1,7 @@
 import path from "path";
 import { Database } from "./database.js";
 import { randomUUID } from "crypto";
+import { buildRoutePath } from "./utils/build-route-path.js";
 
 const database = new Database()
 
@@ -9,7 +10,7 @@ export const routes = [
         // funcionalidade muda a partir do método enviado.
 
         method: 'GET',
-        path: '/tasks',
+        path: buildRoutePath('/tasks'),
         handler: (req, res) => {
             const tasks = database.select("tasks");
 
@@ -18,7 +19,7 @@ export const routes = [
     },
     {
         method: 'POST',
-        path: '/tasks',
+        path: buildRoutePath('/tasks'),
         handler: (req, res) => {
             const { title, description } = req.body;
 
@@ -37,8 +38,23 @@ export const routes = [
     }
         },
         {
+            method: 'PUT',
+            path: buildRoutePath('/tasks/:id'),
+            handler: (req, res) => {
+                const { id } = req.params;
+                const { title, description } = req.body
+
+                database.update('tasks', id, {
+                    title,
+                    description,
+                });
+
+                return res.writeHead(204).end();
+            }
+        },
+        {
             method: 'DELETE',
-            path: '/tasks/:id',
+            path: buildRoutePath('/tasks/:id'),
             handler: (req, res) => {
                 const { id } = req.params;
 
