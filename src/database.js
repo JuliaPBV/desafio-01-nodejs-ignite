@@ -7,20 +7,30 @@ export class Database {
 
     constructor() {
         fs.readFile(databasePath, 'utf8')
-          .then(data => {
+    .then(data => {
             this.#database = JSON.parse(data)
-          })
-          .catch(() => {
+    })
+    .catch(() => {
             this.#persist()
-          })
-      }
-
-    #persist() {
-        fs.writeFile('db.json', JSON.stringify(this.#database))
+    })
     }
 
-    select(table){
-        const data = this.#database[table] ?? []
+    #persist() {
+        fs.writeFile(databasePath, JSON.stringify(this.#database)) //'db.json'
+    }
+
+    select(table, search){
+        let data = this.#database[table] ?? []
+
+        if (search) {
+            data = data.filter(row => {
+                return Object.entries(search).some(([key, value]) => {
+                    if (!value) return true
+
+                    return row[key].includes(value)
+                })
+            })
+        }
 
         return data
     }
@@ -41,7 +51,8 @@ export class Database {
         const rowIndex = this.#database[table].findIndex((row) => row.id === id)
 
         if (rowIndex > -1) {
-            this.#database[table] = { id, ...data }
+            const row = this.#database[table][rowIndex]
+            this.#database[table][rowIndex] = { id, ...row, ...data }
             this.#persist()
         }
     }

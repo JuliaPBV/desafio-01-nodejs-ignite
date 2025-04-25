@@ -11,7 +11,6 @@ const csvParse = parse({
   fromLine: 2 //pula o cabeçalho
 });
 
-
 async function read() {
   const linesParser = stream.pipe(csvParse);
 
